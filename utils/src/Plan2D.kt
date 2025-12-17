@@ -78,4 +78,31 @@ class ListPlan2D<T>(min: Point2D, max: Point2D, initial: T) : Plan2D<T>(min, max
             println()
         }
     }
+
+    companion object {
+        fun fromLines(lines: List<String>, initial: Char = ' '): ListPlan2D<Char> {
+            if (lines.isEmpty()) {
+                return ListPlan2D(Point2D(0, 0), Point2D(0, 0), initial)
+            }
+
+            val height = lines.size
+            val width = lines.maxOf { it.length }
+            val min = Point2D(0, 0)
+            val max = Point2D(width - 1, height - 1)
+
+            val plan = ListPlan2D(min, max, initial)
+
+            lines.forEachIndexed { y, line ->
+                line.forEachIndexed { x, char ->
+                    plan.setAt(Point2D(x, y), char)
+                }
+            }
+
+            return plan
+        }
+
+        fun fromFile(path: String, initial: Char = ' '): ListPlan2D<Char> {
+            return fromLines(java.io.File(path).readLines(), initial)
+        }
+    }
 }
